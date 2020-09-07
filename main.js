@@ -72,7 +72,7 @@ function cleanData(jsonData) {
       newStudent.middleName = null;
       newStudent.nickName = null;
     }
-    if (newStudent.middlename !== null) {
+    if ((newStudent.middlename !== null) & !newStudent.nickName) {
       newStudent.nickName = null;
     }
 
