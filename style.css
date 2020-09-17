@@ -1,0 +1,245 @@
+body {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  margin: 0;
+}
+.topnav {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+header h1 {
+  text-align: center;
+}
+header ol span{
+  margin: 5px;
+}
+.student {
+  cursor: pointer;
+}
+/* Students List */
+table {
+  margin-top: 50px;
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  padding: 10px;
+}
+main {
+  padding: 0 20px;
+}
+
+td,
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #b36c6c;
+}
+/* Modal Design */
+.exit {
+  position: absolute;
+  cursor: pointer;
+  z-index: 10;
+  top: 10%;
+  right: 12%;
+}
+.exit i {
+  font-size: 1.5em;
+}
+.hide {
+  display: none;
+}
+.modal-background {
+  position: fixed;
+  z-index: 200;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+.modal-content {
+  background-color: #fefefe;
+  border: 1px solid #7c1f17;
+  margin: 1em;
+  padding: 2em;
+  margin-left: 7%;
+  width: 80%;
+  height: 80vh;
+  filter: brightness(80%);
+
+}
+.modal-content > h1 {
+  text-transform: uppercase;
+}
+.details  .fullname {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.details  .fullname > h1 {
+  margin-left: 5px;
+}
+.details p{
+  font-size: 1.2em;
+}
+ .details{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  position: absolute;
+  top: 8%;
+}
+/*  Houses themes */
+:root {
+  --slytherin-color: white
+  --hufflepuff-color: black;
+  --ravenclaw-color: white;
+  --gryffindor-color: black;
+}
+
+.Slytherin {
+  background: linear-gradient(#2a623d 50%, #aaaaaa 50%);
+  color: var(--slytherin-color);
+  border: none;
+  font-family: pulpfiction;
+}
+
+.Hufflepuff {
+  background: linear-gradient( #FFDB00 50%, #60605C 50%);
+  font-family: fightclub;
+  font-style: normal;
+  color: var(--hufflepuff-color);
+}
+
+.Ravenclaw {
+  background: linear-gradient(#222F5B 50%,#946B2D 50%);
+  border: none;
+  color: var(--ravenclaw-color);
+  font-family: goodfellas;
+}
+.Ravenclaw h1 {
+  text-transform: capitalize;
+}
+.Gryffindor {
+  background: linear-gradient(#ae0001 50%, #d3a625 50%);
+  font-family: inception;
+  color: var(--gryffindor-color);
+}
+
+/* Fonts */
+
+@font-face {
+  font-family: "pulpfiction";
+  src: url("fonts/PulpFictionFont/Pulp\ Fiction\ Italic\ M54.ttf")
+    format("woff2");
+}
+
+@font-face {
+  font-family: "goodfellas";
+  src: url("fonts/normande/NormandeBT-Roman.otf") format("woff2");
+}
+
+@font-face {
+  font-family: "fightclub";
+  src: url("fonts/FightThis.ttf") format("woff2");
+}
+
+@font-face {
+  font-family: "inception";
+  src: url("fonts/Inception_free.ttf") format("woff2");
+}
+
+/* Filtering */
+
+input[type="radio"] {
+  position: absolute;
+  left: -9999px;
+}
+
+:root {
+  --black: #1a1a1a;
+  --white: #fff;
+  --red: #b36c6c;
+}
+
+.filters {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.filters * {
+  display: inline-block;
+}
+
+.filters label {
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.25rem;
+  border-radius: 2rem;
+  min-width: 50px;
+  line-height: normal;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.filters label:hover {
+  background: var(--red);
+  color: var(--white);
+}
+:root {
+  --black: #1a1a1a;
+  --white: #fff;
+  --red: #b36c6c;
+}
+
+[value="All"]:checked ~ .filters [for="All"],
+[value="Slytherin"]:checked ~ .filters [for="Slytherin"],
+[value="Hufflepuff"]:checked ~ .filters [for="Hufflepuff"],
+[value="Ravenclaw"]:checked ~ .filters [for="Ravenclaw"],
+[value="Gryffindor"]:checked ~ .filters [for="Gryffindor"],
+[value="Expelled"]:checked ~ .filters [for="Expelled"],
+[value="Not-expelled"]:checked ~ .filters [for="Not-expelled"] {
+  background: var(--red);
+  color: var(--white);
+}
+
+/* Sorting */
+
+[data-action] {
+  cursor: pointer;
+}
+
+/* Search Stylong from W3school */
+
+.topnav .search-container {
+  float: right;
+  text-align: center;
+}
+
+.topnav input[type="text"] {
+  padding: 6px;
+  margin-top: 8px;
+  font-size: 17px;
+  border: none;
+}
+
+.topnav .search-container button {
+  float: right;
+  padding: 6px 10px;
+  margin-top: 8px;
+  margin-right: 16px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+
+.topnav .search-container button:hover {
+  background: #ccc;
+}

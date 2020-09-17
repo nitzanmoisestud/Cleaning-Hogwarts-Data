@@ -4,9 +4,186 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=scr, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script
+      src="https://kit.fontawesome.com/8a223d976c.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="style.css" />
     <title>Cleaning Hogwarts Data</title>
   </head>
   <body>
+    <header>
+      <h1>Hogwarts Students Table</h1>
+      <nav class="topnav">
+
+        <div class="filter-wrapper">
+          <input
+            class="filter"
+            type="radio"
+            id="All"
+            name="All"
+            value="All"
+            checked
+          />
+          <input
+            class="filter"
+            type="radio"
+            id="Slytherin"
+            name="house"
+            value="Slytherin"
+          />
+          <input
+            class="filter"
+            type="radio"
+            id="Ravenclaw"
+            name="house"
+            value="Ravenclaw"
+          />
+          <input class="filter" type="radio" id="Hufflepuff" name="house" value="Hufflepuff" />
+          <input
+            class="filter"
+            type="radio"
+            id="Gryffindor"
+            name="house"
+            value="Gryffindor"
+          />
+          <input
+            class="filter"
+            type="radio"
+            id="Expelled"
+            name="Expelled"
+            value="Expelled"
+          />
+          <input
+            class="filter"
+            type="radio"
+            id="Not-expelled"
+            name="Expelled"
+            value="Not-expelled"
+          />
+          <ol class="filters">
+            <li>
+              <label for="All">All
+
+                <span class="all-number">0</span>
+              </label>
+            </li>
+  
+            <li>
+              <label for="Slytherin">Slytherin
+
+                <span class="Slytherin-number">0</span>
+              </label>
+
+            </li>
+            <li>
+              <label for="Ravenclaw">Ravenclaw
+
+                <span class="Ravenclaw-number">0</span>
+              </label>
+
+            </li>
+            <li>
+              <label for="Hufflepuff">Hufflepuff
+
+                <span class="Hufflepuff-number">0</span>
+              </label>
+
+            </li>
+            <li>
+              <label for="Gryffindor">Gryffindor
+
+                <span class="Gryffindor-number">0</span>
+              </label>
+
+            </li>
+            <li>
+              <label for="Expelled">Expelled
+
+                <span class="Expelled-number">0</span>
+              </label>
+
+            </li>
+            <li>
+              <label for="Not-expelled">Not-expelled
+
+                <span class="Not-expelled-number">0</span>
+              </label>
+
+            </li>
+          </ol>
+        </div>
+        <div class="search-container">
+          <form onsubmit="return false" action="">
+            <input
+              class="search"
+              type="text"
+              placeholder="Search.."
+              name="search"
+            />
+            <button type="submit"><i class="fa fa-search"></i></button>
+          </form>
+      </nav>
+      </div>
+    </header>
+    <main>
+      <table>
+        <thead>
+          <tr id="sorting">
+            <th
+              data-action="sort"
+              data-sort-direction="asc"
+              data-sort="firstName"
+            >
+              First Name
+            </th>
+            <th
+              data-action="sort"
+              data-sort-direction="asc"
+              data-sort="lastName"
+            >
+              Last Name
+            </th>
+            <th data-action="sort" data-sort-direction="asc" data-sort="house">
+              House
+            </th>
+            <th>Image</th>
+          </tr>
+        </thead>
+        <tbody class="students"></tbody>
+      </table>
+      <div class="modal-background hide">
+        <div class="exit"><i class="fas fa-times"></i></div>
+        <div class="modal-content">
+        </div>
+              <div class="details">
+        
+        <div class="fullname">
+        
+        <h1 class="firstname"></h1>
+        <h1 class="middlename"></h1>
+        <h1 class="nickname"></h1>
+        <h1 class="lastname"></h1>
+        </div>
+        <img class="student-image" width="100" height="100" src="" alt="">
+        <h2 class="house"></h2>
+        
+        
+        <p >Blood Status: <span class="blood-status"></span></p>
+        <p>Prefect: <span class="prefect"></span></p>
+        <p>Expelled: <span class="expelled"></span></p>
+        <p>Member of Inquisitorial Squad: <span class="member"></span></p>
+              </div>
+      </div>
+    </main>
+    <template>
+      <tr class="student">
+        <td class="firstname"></td>
+        <td class="lastname"></td>
+        <td class="house"></td>
+        <td class="image"><img width="100" height="100" src="" alt="" /></td>
+      </tr>
+    </template>
     <script src="main.js"></script>
   </body>
 </html>
