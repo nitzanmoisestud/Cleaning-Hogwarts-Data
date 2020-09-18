@@ -1,7 +1,12 @@
 "use strict";
 window.addEventListener("load", start);
 
+//  Empty global students array that will be filled in prepareObjects function
+
 let allStudents = [];
+let expelledStudents = [];
+let notExpelledStudents = [];
+// Global settings for filter and sort functions
 
 const settings = {
   filterBy: "All",
@@ -9,6 +14,7 @@ const settings = {
   sortDir: "asc",
   filterName: "All",
 };
+
 const Student = {
   firstName: "",
   lastName: "",
@@ -23,6 +29,9 @@ const Student = {
 };
 
 const filterInputs = document.querySelectorAll(".filter");
+
+// Start function begins the application by calling load Json and setting up click and input evenents to filter sort and search buttons/input
+
 function start() {
   filterInputs.forEach((input) => {
     input.addEventListener("click", selectFilter);
@@ -31,10 +40,14 @@ function start() {
   sortBtns.forEach((btn) => {
     btn.addEventListener("click", selectSort);
   });
+  const removeBtn = modal.querySelector(".remove");
+  removeBtn.addEventListener("click", handleRemove);
   loadJSON();
   const searchInput = document.querySelector(".search");
   searchInput.addEventListener("input", displaySearch);
 }
+
+// Search function
 
 function displaySearch(event) {
   console.log(event.target.value);
@@ -82,6 +95,8 @@ function sortList(list) {
   return sortedList;
 }
 
+//  Filter functions
+
 function selectFilter(event) {
   filterInputs.forEach((input) => {
     input.style.background = "none";
@@ -91,7 +106,8 @@ function selectFilter(event) {
   });
 
   if (settings.filterBy === "All") {
-    loadJSON();
+    // loadJSON();
+    displayList(allStudents);
   }
 
   setFilter(event);
@@ -100,18 +116,15 @@ function filterList() {
   let filteredStudents = allStudents.filter((student) => {
     if (settings.filterName === "house") {
       return student.house === settings.filterBy;
-    } else if (settings.filterName === "Expelled") {
-      if (settings.filterBy === "Expelled") {
-        return student.expelled;
-      } else {
-        return !student.expelled;
-      }
-    } else {
+    } else if (settings.filterBy === "All") {
       return student;
     }
   });
-
-  // displayList(filteredStudents);
+  if (settings.filterBy === "Expelled") {
+    filteredStudents = expelledStudents;
+  } else if (settings.filterBy === "Not-expelled") {
+    filteredStudents = notExpelledStudents;
+  }
   return filteredStudents;
 }
 function setFilter(event) {
@@ -123,15 +136,23 @@ function setFilter(event) {
 function loadJSON() {
   fetch("https://petlatkea.dk/2020/hogwarts/students.json")
     .then((response) => response.json())
-    .then((student) => prepareObjects(student));
+    .then((data) => prepareObjects(data));
 }
 
+// Reciving data from fetch function
+
 function prepareObjects(jsonData) {
+  console.log(jsonData);
+
   allStudents = jsonData.map(preapareObject);
+  notExpelledStudents = allStudents;
   displayCounters(allStudents);
+  loadBloodStatus();
 
   displayList(allStudents);
 }
+
+// Cleaning students object before deplaying
 
 function preapareObject(jsonObject) {
   const student = Object.create(Student);
@@ -192,8 +213,15 @@ function preapareObject(jsonObject) {
     student.nickName = null;
   }
 
+  student.isExpelled = false;
+
+  student.isMember = false;
+  student.isPrefect = false;
+  student.isPureBlood = false;
   return student;
 }
+
+// Joining filter list and sorting list together
 
 function buildList(event) {
   const currentList = filterList(allStudents);
@@ -202,6 +230,8 @@ function buildList(event) {
 
   displayList(sortedList);
 }
+
+// Displaying students
 
 function displayList(cleanedStudents) {
   document.querySelector(".students").innerHTML = "";
@@ -227,6 +257,8 @@ function displayList(cleanedStudents) {
   });
 }
 
+//  Modal rendering and controllind appearence
+
 const modalContent = document.querySelector(".modal-content");
 const themes = ["Slytherin", "Hufflepuff", "Ravenclaw", "Gryffindor"];
 
@@ -244,7 +276,11 @@ function showModalDetails(student) {
   }
   modal.querySelector("img").src = `/images/${student.image}`;
   modal.querySelector(".house").textContent = student.house;
-  modal.querySelector(".blood-status").textContent = student.bloodStatus;
+  if (student.isPureBlood) {
+    modal.querySelector(".blood-status").textContent = "Pure Blood";
+  } else {
+    modal.querySelector(".blood-status").textContent = "Half Blood";
+  }
   if (student.isExpelled) {
     modal.querySelector(".expelled").textContent = "Expelled";
   } else {
@@ -260,6 +296,8 @@ function showModalDetails(student) {
   } else {
     modal.querySelector(".member").textContent = "No";
   }
+  const removeBtn = modal.querySelector(".remove");
+  removeBtn.id = student.firstName;
 
   modalContent.classList.add(student.house);
   modal.classList.remove("hide");
@@ -268,12 +306,15 @@ function showModalDetails(student) {
 const modal = document.querySelector(".modal-background");
 const exitBtn = document.querySelector(".exit");
 
-exitBtn.addEventListener("click", () => {
+exitBtn.addEventListener("click", closeModal);
+function closeModal() {
   modal.classList.add("hide");
-});
+}
+
+//  Counting numbers of students for each filter group
 
 function displayCounters(data) {
-  document.querySelector(".all-number").textContent = countAllStudents(data);
+  document.querySelector(".all-number").textContent = countAllStudents();
   document.querySelector(
     ".Slytherin-number"
   ).textContent = countSlytherinStudents(data);
@@ -288,18 +329,13 @@ function displayCounters(data) {
   ).textContent = countGryffindorStudents(data);
   document.querySelector(
     ".Expelled-number"
-  ).textContent = countExpelledStudents(data, true);
+  ).textContent = countExpelledStudents();
   document.querySelector(
     ".Not-expelled-number"
-  ).textContent = countExpelledStudents(data, false);
+  ).textContent = countNotExpelledStudents();
 }
-function countAllStudents(students) {
-  let counter = 0;
-  for (let index = 0; index < students.length; index++) {
-    counter++;
-  }
-
-  return counter;
+function countAllStudents() {
+  return allStudents.length;
 }
 function countSlytherinStudents(students) {
   let counter = 0;
@@ -345,14 +381,61 @@ function countGryffindorStudents(students) {
 
   return counter;
 }
-function countExpelledStudents(students, isExpelled) {
-  let counter = 0;
+function countExpelledStudents() {
+  return expelledStudents.length;
+}
+function countNotExpelledStudents() {
+  return notExpelledStudents.length;
+}
 
-  students.forEach((student) => {
-    if (student.isExpelled === isExpelled) {
-      counter++;
+// Frtching blood status data
+
+function loadBloodStatus() {
+  fetch("https://petlatkea.dk/2020/hogwarts/families.json")
+    .then((response) => response.json())
+    .then((data) => cleanBloodList(data));
+}
+function cleanBloodList(data) {
+  allStudents.forEach((student) => {
+    if (
+      data.half.includes(student.lastName) &
+      data.pure.includes(student.lastName)
+    ) {
+      data.half.splice(data.half.indexOf(student.lastName), 1);
     }
   });
+  setBloodStatus(data);
+}
+function setBloodStatus(list) {
+  allStudents.forEach((student) => {
+    if (list.half.includes(student.lastName)) {
+      student.isPureBlood = false;
+    } else {
+      student.isPureBlood = true;
+    }
+  });
+}
 
-  return counter;
+// Expelled students functions
+
+function handleRemove(event) {
+  console.log(event.target.id);
+  let studentName = event.target.id;
+  removeStudent(studentName);
+}
+
+function removeStudent(studentName) {
+  console.log(allStudents.length);
+
+  notExpelledStudents = allStudents.filter((student) => {
+    if (student.firstName === studentName) {
+      student.isExpelled = true;
+      expelledStudents.push(student);
+    }
+    return student.firstName !== studentName;
+  });
+  // displayList(allStudents);
+  displayCounters(allStudents);
+  closeModal();
+  console.log(notExpelledStudents);
 }

@@ -50,6 +50,19 @@ tr:nth-child(even) {
 .exit i {
   font-size: 1.5em;
 }
+ .remove{
+  /* background-color: #b36c6c; */
+ padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  margin-right: 5px;
+
+  cursor: pointer;
+  height: 30px;
+  transition: all 0.1s;
+  align-self: center;
+  /* color:white; */
+  border: none;
+}
 .hide {
   display: none;
 }
@@ -64,13 +77,12 @@ tr:nth-child(even) {
 }
 .modal-content {
   background-color: #fefefe;
-  border: 1px solid #7c1f17;
   margin: 1em;
   padding: 2em;
   margin-left: 7%;
   width: 80%;
   height: 80vh;
-  filter: brightness(80%);
+  filter: brightness(70%);
 
 }
 .modal-content > h1 {
