@@ -1,7 +1,35 @@
+html, body {
+    width: 100%;
+    height: 100%;
+                max-width: 100%; 
+                min-width: 100%;
+
+    padding: 0;
+    margin: 0;
+    overflow-x: visible;
+    overflow-y: visible;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  }
+
+  /* Body animations from https://www.sitepoint.com/how-to-create-full-page-animations-using-css/ */
+ 
+ @keyframes whirlOut {
+to {
+    transform: scale(0) rotateZ(1260deg);
+ 
+   }
+}
+.hacked{
+      animation: whirlOut 8s ;
+
+}
+
+
 body {
   background-color: rgba(0, 0, 0, 0.7);
   color: white;
   margin: 0;
+ 
 }
 .topnav {
   display: flex;
@@ -50,18 +78,32 @@ tr:nth-child(even) {
 .exit i {
   font-size: 1.5em;
 }
- .remove{
-  /* background-color: #b36c6c; */
- padding: 0.5rem 1rem;
+
+button{
+    padding: 0.5rem 1rem;
   border-radius: 2rem;
   margin-right: 5px;
-
+align-self: flex-start;
   cursor: pointer;
   height: 30px;
   transition: all 0.1s;
-  align-self: center;
+  align-self: flex-start;
+  margin-bottom: 5px;
   /* color:white; */
   border: none;
+}
+.buttons{
+  position: absolute;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-around;
+  align-items: flex-start;
+  align-content: space-around;
+  justify-items: flex-start;
+  
+   z-index: 10;
+  top: 8%;
+  left: 12%;
 }
 .hide {
   display: none;
@@ -91,6 +133,7 @@ tr:nth-child(even) {
 .details  .fullname {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   width: 100%;
 }
 .details  .fullname > h1 {
@@ -102,11 +145,16 @@ tr:nth-child(even) {
  .details{
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
   position: absolute;
   top: 8%;
+}
+.details > .header{
+  align-self: center;
+  align-items: center;
+  justify-content: center;
 }
 /*  Houses themes */
 :root {
