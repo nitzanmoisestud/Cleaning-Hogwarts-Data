@@ -273,7 +273,7 @@ function displayList(cleanedStudents) {
     }
     counter++;
     if (student.lastName) {
-      aCopy.querySelector(".image > img").src = `/images/${student.image}`;
+      aCopy.querySelector(".image > img").src = `images/${student.image}`;
     }
     aCopy.querySelector(".student").addEventListener("click", () => {
       showModalDetails(student);
