@@ -421,7 +421,6 @@ function sendHackerMessage() {
   prompt("What are you doing? hacker cannot be expelled!");
   displayList(allStudents);
   displayCounters(allStudents);
-  closeModal();
 }
 function removeStudentFromList(studentName) {
   sounds.sad.play();
@@ -610,4 +609,5 @@ function mixBloodStatus() {
       student.isPureBlood = true;
     }
   });
+  displayList(allStudents);
 }
