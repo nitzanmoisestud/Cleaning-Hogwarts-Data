@@ -305,7 +305,7 @@ function showModalDetails(student) {
   if (student.nickName) {
     modal.querySelector(".nickname").textContent = student.nickName;
   }
-  modal.querySelector("img").src = `/images/${student.image}`;
+  modal.querySelector("img").src = `images/${student.image}`;
   modal.querySelector(".house").textContent = student.house;
   if (student.isPureBlood) {
     modal.querySelector(".blood-status").textContent = "Pure Blood";
