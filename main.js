@@ -7,6 +7,8 @@ let allStudents = [];
 let expelledStudents = [];
 let hasBeenHacked = false;
 let inquisitorialSquad = [];
+const houses = ["Slytherin", "Hufflepuff", "Ravenclaw", "Gryffindor"];
+
 // Global settings for filter and sort functions
 
 const settings = {
@@ -15,7 +17,11 @@ const settings = {
   sortDir: "asc",
   filterName: "All",
 };
-
+const sounds = {
+  falling: new Audio("sounds/falling.mp3"),
+  sad: new Audio("sounds/sad.mp3"),
+  angry: new Audio("sounds/angry.mp3"),
+};
 const Student = {
   firstName: "",
   lastName: "",
@@ -55,7 +61,7 @@ function start() {
 
 // Key function to start hacking by presing H key
 function logKey(e) {
-  if (e.code === "KeyH") {
+  if ((e.code === "KeyH") & (hasBeenHacked === false)) {
     hackTheSystem();
   }
 }
@@ -231,7 +237,7 @@ function preapareObject(jsonObject) {
 
 // Joining filter list and sorting list together
 
-function buildList(event) {
+function buildList() {
   const currentList = filterList(allStudents);
 
   const sortedList = sortList(currentList);
@@ -286,10 +292,9 @@ function displayList(cleanedStudents) {
 //  Modal rendering and controllind appearence
 
 const modalContent = document.querySelector(".modal-content");
-const themes = ["Slytherin", "Hufflepuff", "Ravenclaw", "Gryffindor"];
 
 function showModalDetails(student) {
-  themes.forEach((theme) => {
+  houses.forEach((theme) => {
     modalContent.classList.remove(theme);
   });
   modal.querySelector(".firstname").textContent = student.firstName;
@@ -322,12 +327,14 @@ function showModalDetails(student) {
   } else {
     modal.querySelector(".member").textContent = "No";
   }
+  modal.querySelector(".details").classList.add(`${student.firstName}`);
+
   const removeBtn = modal.querySelector(".remove");
-  removeBtn.id = student.firstName;
+  removeBtn.dataset.studentName = student.firstName;
   const prefectBtn = modal.querySelector(".set-prefect");
-  prefectBtn.id = student.firstName;
+  prefectBtn.dataset.studentName = student.firstName;
   const inqBtn = modal.querySelector(".inq-squad");
-  inqBtn.id = student.firstName;
+  inqBtn.dataset.studentName = student.firstName;
 
   modalContent.classList.add(student.house);
   modal.classList.remove("hide");
@@ -344,72 +351,22 @@ function closeModal() {
 //  Counting numbers of students for each filter group
 
 function displayCounters(data) {
-  document.querySelector(".all-number").textContent = countAllStudents();
-  document.querySelector(
-    ".Slytherin-number"
-  ).textContent = countSlytherinStudents(data);
-  document.querySelector(
-    ".Ravenclaw-number"
-  ).textContent = countRavenclawStudents(data);
-  document.querySelector(
-    ".Hufflepuff-number"
-  ).textContent = countHufflepuffStudents(data);
-  document.querySelector(
-    ".Gryffindor-number"
-  ).textContent = countGryffindorStudents(data);
-  document.querySelector(
-    ".Expelled-number"
-  ).textContent = countExpelledStudents();
-}
-function countAllStudents() {
-  return allStudents.length;
-}
-function countSlytherinStudents(students) {
-  let counter = 0;
-
-  students.forEach((student) => {
-    if (student.house === "Slytherin") {
-      counter++;
-    }
+  document.querySelector(".all-number").textContent = allStudents.length;
+  houses.forEach((house) => {
+    document.querySelector(
+      `.${house}-number`
+    ).textContent = countHousesStudents(data, house);
   });
 
-  return counter;
+  document.querySelector(".Expelled-number").textContent =
+    expelledStudents.length;
 }
-function countRavenclawStudents(students) {
-  let counter = 0;
 
-  students.forEach((student) => {
-    if (student.house === "Ravenclaw") {
-      counter++;
-    }
+function countHousesStudents(students, house) {
+  let houseArray = students.filter((student) => {
+    return student.house === house;
   });
-
-  return counter;
-}
-function countHufflepuffStudents(students) {
-  let counter = 0;
-
-  students.forEach((student) => {
-    if (student.house === "Hufflepuff") {
-      counter++;
-    }
-  });
-
-  return counter;
-}
-function countGryffindorStudents(students) {
-  let counter = 0;
-
-  students.forEach((student) => {
-    if (student.house === "Gryffindor") {
-      counter++;
-    }
-  });
-
-  return counter;
-}
-function countExpelledStudents() {
-  return expelledStudents.length;
+  return houseArray.length;
 }
 
 // Fetching blood status data
@@ -443,47 +400,60 @@ function setBloodStatus(list) {
 // Expelled students functions
 
 function handleRemove(event) {
-  let studentName = event.target.id;
+  let studentName = event.target.dataset.studentName;
   removeStudent(studentName);
 }
 
 function removeStudent(studentName) {
-  console.log(allStudents.length);
   const studentObj = getStudent(studentName);
   if (studentObj.hacker === true) {
-    scream.play();
-    prompt("What are you doing? hacker cannot be expelled!");
+    sendHackerMessage();
   } else {
-    allStudents = allStudents.filter((student) => {
-      if ((student.firstName === studentName) & !student.hacker) {
-        student.isExpelled = true;
-        expelledStudents.push(student);
-      }
+    document
+      .querySelector(`.modal-background`)
+      .classList.add("expel-animation");
 
-      return student.firstName !== studentName;
-    });
+    removeStudentFromList(studentName);
   }
-
-  console.log(studentObj);
+}
+function sendHackerMessage() {
+  sounds.angry.play();
+  prompt("What are you doing? hacker cannot be expelled!");
   displayList(allStudents);
   displayCounters(allStudents);
   closeModal();
+}
+function removeStudentFromList(studentName) {
+  sounds.sad.play();
+  allStudents = allStudents.filter((student) => {
+    if ((student.firstName === studentName) & !student.hacker) {
+      student.isExpelled = true;
+      expelledStudents.push(student);
+    }
+
+    return student.firstName !== studentName;
+  });
+  setTimeout(() => {
+    displayList(allStudents);
+    displayCounters(allStudents);
+    closeModal();
+    document
+      .querySelector(`.modal-background`)
+      .classList.remove("expel-animation");
+  }, 3000);
 }
 
 // Set prefects functions
 
 function handelPrefectEvent(event) {
-  let studentName = event.target.id;
+  let studentName = event.target.dataset.studentName;
   let studetnObj = getStudent(studentName);
   checkIfStudentPrefect(studetnObj);
 }
 function checkIfStudentPrefect(studetnObj) {
   if (studetnObj.isPrefect) {
-    console.log(studetnObj.isPrefect, "student is alrready a prefect");
     removePrefect(studetnObj);
   } else {
-    console.log(studetnObj, "student is not a prefect");
-
     checkPrefectsList(studetnObj);
   }
 }
@@ -529,6 +499,7 @@ function setPrefect(studentObj) {
   });
   displayList(allStudents);
   closeModal();
+  showModalDetails(studentObj);
 }
 
 function removePrefect(studentObj) {
@@ -540,14 +511,14 @@ function removePrefect(studentObj) {
   });
   displayList(allStudents);
   closeModal();
+  showModalDetails(studentObj);
 }
 // Add/Remove member to InqSquad and check blood status
 
 function handelInqSquadEvent(event) {
-  const studentName = event.target.id;
+  const studentName = event.target.dataset.studentName;
   let studentObj = getStudent(studentName);
   checkMember(studentObj);
-  console.log(studentName);
 }
 function checkMember(studentObj) {
   if (studentObj.isMember) {
@@ -578,6 +549,7 @@ function addToInqSquad(studentObj) {
   });
   displayList(allStudents);
   closeModal();
+  showModalDetails(studentObj);
 }
 
 function removeFromInqSquad(studentObj) {
@@ -593,29 +565,23 @@ function removeFromInqSquad(studentObj) {
   prompt(`${studentObj.firstName} has been removed from the Inquisitorial Squad
 `);
   closeModal();
+  showModalDetails(studentObj);
 }
 
 // Hacking
 
-const scream = new Audio("../sounds/scream.wav");
-const hell = new Audio("../sounds/hell.wav");
-
 function hackTheSystem() {
-  hell.play();
-  const html = document.querySelector(".html");
-
-  document.querySelector("body").classList.add("hacked");
-  setTimeout(() => {
-    document.querySelector("body").classList.remove("hacked");
-    // document.querySelector("body").classList.add("fix");
-    // setTimeout(() => {
-    hell.pause();
-
-    // }, 5000);
-  }, 8000);
+  const mySelf = createHackerObj();
+  hasBeenHacked = true;
+  makeHackingAnimation();
+  allStudents.unshift(mySelf);
+  displayList(allStudents);
+  mixBloodStatus();
+}
+function createHackerObj() {
   const mySelf = Object.create(Student);
-  mySelf.firstName = "Nitzan";
   mySelf.lastName = "Moise";
+  mySelf.firstName = "Nitzan";
   mySelf.image = "hacker.jpg";
   mySelf.house = "Gryffindor";
   mySelf.isExpelled = false;
@@ -623,13 +589,17 @@ function hackTheSystem() {
   mySelf.isPrefect = false;
   mySelf.isPureBlood = true;
   mySelf.hacker = true;
-  allStudents.unshift(mySelf);
-  displayList(allStudents);
-  hasBeenHacked = true;
-  mixBloodStatus();
-  prompt("System is hacked!!!");
-}
 
+  return mySelf;
+}
+function makeHackingAnimation() {
+  prompt("System is hacked!!!");
+  sounds.falling.play();
+  document.querySelector("body").classList.add("hacked");
+  setTimeout(() => {
+    document.querySelector("body").classList.remove("hacked");
+  }, 6000);
+}
 function mixBloodStatus() {
   const bloodStatuses = [true, false];
 

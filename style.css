@@ -15,15 +15,31 @@ html, body {
  
  @keyframes whirlOut {
 to {
-    transform: scale(0) rotateZ(1260deg);
+    transform: scale(0) rotateZ(1960deg);
  
    }
+}
+.hacked{
+      animation: whirlOut .2s both ;
+
+}
+
+/* Fade animation after expelling a student */
+ @keyframes fade {
+   from{
+     opacity: 1;
+   }
+to {
+opacity: 0; 
+   }
+}
+.expel-animation{
+  animation: fade 5s both;
 }
 .hacked{
       animation: whirlOut 8s ;
 
 }
-
 
 body {
   background-color: rgba(0, 0, 0, 0.7);
@@ -246,6 +262,7 @@ input[type="radio"] {
   line-height: normal;
   cursor: pointer;
   transition: all 0.1s;
+  text-transform: uppercase;
 }
 
 .filters label:hover {
